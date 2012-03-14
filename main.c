@@ -166,7 +166,6 @@ int main(int argc, char* argv[]) {
 		}
 
 		addr = stm->dev->fl_start + (spage * stm->dev->fl_ps);
-		fprintf(stdout, "\x1B[s");
 		fflush(stdout);
 		fprintf(stdout, "\033[?25l");
 		while(addr < stm->dev->fl_end) {
@@ -180,11 +179,10 @@ int main(int argc, char* argv[]) {
 			addr += len;
 
 			fprintf(stdout,
-				"\x1B[uRead address 0x%08x (%.2f%%) ",
+				"\033[1GRead address 0x%08x (%.2f%%) ",
 				addr,
 				(100.0f / (float)(stm->dev->fl_end - stm->dev->fl_start)) * (float)(addr - stm->dev->fl_start)
 			);
-			fprintf(stdout, "\033[1G");
 			fflush(stdout);
 		}
 		fprintf(stdout,	"Done.\n");
@@ -217,8 +215,8 @@ int main(int argc, char* argv[]) {
 		}
 
 		addr = stm->dev->fl_start + (spage * stm->dev->fl_ps);
-		fprintf(stdout, "\x1B[s");
 		fflush(stdout);
+                fprintf(stdout, "\033[?25l");
 		while(addr < stm->dev->fl_end && offset < size) {
 			uint32_t left	= stm->dev->fl_end - addr;
 			len		= sizeof(buffer) > left ? left : sizeof(buffer);
@@ -261,8 +259,8 @@ int main(int argc, char* argv[]) {
 			offset	+= len;
 
 			fprintf(stdout,
-				"\x1B[uWrote %saddress 0x%08x (%.2f%%) ",
-				verify ? "and verified " : "",
+				"\033[1GWrote %saddress 0x%08x (%.2f%%) ",
+				verify ? "and verified " : "\n",
 				addr,
 				(100.0f / size) * offset
 			);
@@ -271,6 +269,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		fprintf(stdout,	"Done.\n");
+                fprintf(stdout, "\033[?25h");
 		ret = 0;
 		goto close;
 	} else
