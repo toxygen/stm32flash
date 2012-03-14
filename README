@@ -1,6 +1,6 @@
-stm32flash utility
+h2. stm32flash utility
 
-- patched for nicer output
-- patched to support interrupt signals
+* patched for nicer output
+* patched to support interrupt signals
 
 
