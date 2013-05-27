@@ -76,6 +76,7 @@ serial_err_t serial_setup(serial_t *h, const serial_baud_t baud, const serial_bi
 serial_err_t serial_write(const serial_t *h, const void *buffer, unsigned int len);
 serial_err_t serial_read (const serial_t *h, const void *buffer, unsigned int len);
 const char*  serial_get_setup_str(const serial_t *h);
+void         serial_reset(const serial_t *h, int dtr);
 
 /* common helper functions */
 serial_baud_t serial_get_baud            (const unsigned int baud);

@@ -140,6 +140,13 @@ int main(int argc, char* argv[]) {
 		goto close;
 	}
 
+#if USE_SERIAL_RESET
+        /*
+         * Reset the device to the boot monitor
+         */
+        serial_reset(serial, 0);
+#endif
+
 	printf("Serial Config: %s\n", serial_get_setup_str(serial));
 	if (!(stm = stm32_init(serial, init_flag))) goto close;
 
@@ -293,11 +300,15 @@ close:
 	if (stm && reset_flag) {
 		fprintf(stdout, "\nResetting device... ");
 		fflush(stdout);
+#if USE_SERIAL_RESET
+                serial_reset(serial, 1);
+                fprintf(stdout, "done.\n");
+#else
 		if (stm32_reset_device(stm))
 			fprintf(stdout, "done.\n");
 		else	fprintf(stdout, "failed.\n");
+#endif
 	}
-
 
 	cleanup();
 	printf("\n");

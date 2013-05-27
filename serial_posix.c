@@ -18,6 +18,8 @@
 */
 
 
+#include <sys/ioctl.h>
+
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -222,3 +224,25 @@ const char* serial_get_setup_str(const serial_t *h) {
 	return str;
 }
 
+void serial_reset(const serial_t *serial, int dtr) {
+    int state;
+
+    int err = ioctl(serial->fd, TIOCMGET, &state);
+
+    // Set DTR according to the parameter
+    if (dtr) {
+        state &= ~TIOCM_DTR;
+    } else {
+        state |= TIOCM_DTR;
+    }
+
+    // Lower RTS to reset
+    state |= TIOCM_RTS;
+    err = ioctl(serial->fd, TIOCMSET, &state);
+    usleep(10000);
+
+    // Let it boot: Raise the RTS
+    state &= ~TIOCM_RTS;
+    err = ioctl(serial->fd, TIOCMSET, &state);
+    usleep(100000);
+}

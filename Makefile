@@ -13,7 +13,8 @@ all:
 		serial_platform.c \
 		parsers/parsers.a \
 		stm32/stmreset_binary.c \
-		-Wall
+		-Wall \
+		-DUSE_SERIAL_RESET
 
 clean:
 	$(MAKE) -C parsers clean
