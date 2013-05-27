@@ -439,6 +439,8 @@ void caught_sigint(int sig)
 	fprintf(stdout, "Caught SIGINT, cleaning up\n");
 	fprintf(stdout, "\033[?25h");
 	cleanup();
+	fprintf(stdout, "Quitting\n");
+	exit(1);
 }
 
 void cleanup()
@@ -446,7 +448,5 @@ void cleanup()
 	if (p_st  ) parser->close(p_st);
 	if (stm   ) stm32_close  (stm);
 	if (serial) serial_close (serial);
-	fprintf(stdout, "Quitting\n");
-	exit(1);
 }
 
