@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <assert.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "serial.h"
