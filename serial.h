@@ -69,6 +69,8 @@ typedef enum {
 	SERIAL_ERR_NODATA
 } serial_err_t;
 
+#define CONST
+
 serial_t*    serial_open (const char *device);
 void         serial_close(serial_t *h);
 void         serial_flush(const serial_t *h);
@@ -79,10 +81,10 @@ const char*  serial_get_setup_str(const serial_t *h);
 serial_err_t serial_reset(const serial_t *h, int dtr);
 
 /* common helper functions */
-serial_baud_t serial_get_baud            (const unsigned int baud);
-const unsigned int serial_get_baud_int   (const serial_baud_t baud);
-const unsigned int serial_get_bits_int   (const serial_bits_t bits);
-const char         serial_get_parity_str (const serial_parity_t parity);
-const unsigned int serial_get_stopbit_int(const serial_stopbit_t stopbit);
+serial_baud_t serial_get_baud      (const unsigned int baud);
+unsigned int serial_get_baud_int   (const serial_baud_t baud) CONST;
+unsigned int serial_get_bits_int   (const serial_bits_t bits) CONST;
+char         serial_get_parity_str (const serial_parity_t parity) CONST;
+unsigned int serial_get_stopbit_int(const serial_stopbit_t stopbit) CONST;
 
 #endif
