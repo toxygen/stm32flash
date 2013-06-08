@@ -224,10 +224,13 @@ const char* serial_get_setup_str(const serial_t *h) {
 	return str;
 }
 
-void serial_reset(const serial_t *serial, int dtr) {
+serial_err_t serial_reset(const serial_t *serial, int dtr) {
     int state;
+    int flush = FREAD | FWRITE;
 
     int err = ioctl(serial->fd, TIOCMGET, &state);
+    if (err)
+        return SERIAL_ERR_SYSTEM;
 
     // Set DTR according to the parameter
     if (dtr) {
@@ -239,10 +242,25 @@ void serial_reset(const serial_t *serial, int dtr) {
     // Lower RTS to reset
     state |= TIOCM_RTS;
     err = ioctl(serial->fd, TIOCMSET, &state);
+    if (err)
+        return SERIAL_ERR_SYSTEM;
+
+    // Wait for 10ms so that the system has time to reset
     usleep(10000);
+
+    // Flush any pending I/O
+    err = ioctl(serial->fd, TIOCFLUSH, &flush);
+    if (err)
+        return SERIAL_ERR_SYSTEM;
 
     // Let it boot: Raise the RTS
     state &= ~TIOCM_RTS;
     err = ioctl(serial->fd, TIOCMSET, &state);
+    if (err)
+        return SERIAL_ERR_SYSTEM;
+
+    // Wait for 100ms so that the system has time to boot up
     usleep(100000);
+
+    return SERIAL_ERR_OK;
 }
