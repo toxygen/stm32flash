@@ -14,6 +14,7 @@ all:
 		parsers/parsers.a \
 		stm32/stmreset_binary.c \
 		-Wall \
+		-mmacosx-version-min=10.6 \
 		-DUSE_SERIAL_RESET
 
 clean:
