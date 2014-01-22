@@ -3,9 +3,14 @@ AR = $(CROSS_COMPILE)ar
 export CC
 export AR
 
+CCFLAGS = -Wall
+ifeq ($(UNAME_S),Darwin)
+CCFLAGS += -mmacosx-version-min=10.6 
+endif
+
 all:
 	$(MAKE) -C parsers
-	$(CC) -g -o stm32flash -I./ \
+	$(CC) $(CCFLAGS) -g -o stm32flash -I./ \
 		main.c \
 		utils.c \
 		stm32.c \
@@ -13,8 +18,6 @@ all:
 		serial_platform.c \
 		parsers/parsers.a \
 		stm32/stmreset_binary.c \
-		-Wall \
-		-mmacosx-version-min=10.6 \
 		-DUSE_SERIAL_RESET
 
 clean:
