@@ -226,7 +226,9 @@ const char* serial_get_setup_str(const serial_t *h) {
 
 serial_err_t serial_reset(const serial_t *serial, int dtr) {
     int state;
+#ifdef __APPLE__
     int flush = FREAD | FWRITE;
+#endif
 
     int err = ioctl(serial->fd, TIOCMGET, &state);
     if (err)
@@ -249,7 +251,11 @@ serial_err_t serial_reset(const serial_t *serial, int dtr) {
     usleep(10000);
 
     // Flush any pending I/O
+#ifdef __APPLE__
     err = ioctl(serial->fd, TIOCFLUSH, &flush);
+#else
+    err = ioctl(serial->fd, TCFLSH, TCIOFLUSH);
+#endif
     if (err)
         return SERIAL_ERR_SYSTEM;
 
